@@ -1,39 +1,35 @@
-FROM java:8
-MAINTAINER Adi Pellumbi <adi.pellumbi@explorite.com>
+FROM node:6
 
-# Install Grails
-ENV GRAILS_VERSION 3.2.8
-WORKDIR /usr/lib/jvm
-RUN wget https://github.com/grails/grails-core/releases/download/v$GRAILS_VERSION/grails-$GRAILS_VERSION.zip && \
-    unzip grails-$GRAILS_VERSION.zip && \
-    rm -rf grails-$GRAILS_VERSION.zip && \
-    ln -s grails-$GRAILS_VERSION grails
+RUN \
+    apt-get update \
+    && apt-get install -y --no-install-recommends \
+    ssh \
+    wget \
+    git \
+    vim \
+    wget \
+    zlib1g-dev \
+    jq \
+    build-essential \
+    iptables \
+    libapparmor1 \
+    libltdl7 \
+    libmcrypt-dev \
+    libxml2-dev \
+    zip \
+    unzip \
+    python \
+    python-dev \
+    python-pip \
+    python-yaml \
+    redis-server \
+    && apt-get clean
 
-# Setup Grails path.
-ENV GRAILS_HOME /usr/lib/jvm/grails
-ENV PATH $GRAILS_HOME/bin:$PATH
+RUN python -v
+RUN pip -v
 
-# Download python3
-RUN apt-get update
-RUN apt-get install -y python-pip
-RUN apt-get install -y python3
-RUN pip install boto3==1.3.0
 RUN pip install awscli --upgrade
 
-# install from nodesource using apt-get
-# https://www.digitalocean.com/community/tutorials/how-to-install-node-js-on-an-ubuntu-14-04-server
-RUN curl -sL https://deb.nodesource.com/setup | bash - && apt-get install -yq nodejs build-essential
+RUN npm install -g yarn --update && yarn global add lambda-local babel-preset-env node-lambda --latest
 
-# fix npm - not the latest version installed by apt-get
-RUN npm install -g npm
-#RUN npm install
 RUN npm install -g gulp
-
-# Create App Directory
-RUN mkdir /app
-
-# Set Workdir
-WORKDIR /app
-
-# Set Default Behavior
-ENTRYPOINT ["grails"]
