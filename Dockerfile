@@ -30,6 +30,4 @@ RUN pip -v
 
 RUN pip install awscli --upgrade
 
-RUN npm install -g yarn --update && yarn global add lambda-local babel-preset-env node-lambda --latest
-
 RUN npm install -g gulp
