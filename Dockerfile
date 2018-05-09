@@ -1,4 +1,4 @@
-FROM node:6
+FROM node:7.5.0
 
 RUN \
     apt-get update \
